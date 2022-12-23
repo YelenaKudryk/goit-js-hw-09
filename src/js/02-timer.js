@@ -38,8 +38,8 @@ const timer = {
 
   onClose() {
     this.intervalID = setInterval(() => {
-      const userDate = Date.parse(refs.inputEl.value);
-      counting = userDate - Date.now();
+      let userDate = Date.parse(refs.inputEl.value);
+      let counting = userDate - Date.now();
       const timerComponents = convertMs(counting);
       fillCounter(timerComponents);
       if (counting <= 1000) {
