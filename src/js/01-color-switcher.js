@@ -5,19 +5,22 @@ const refs = {
 };
 
 let timerId = null;
-refs.stopBtnEl.disabled = true;
+makerBtnDisabled();
 
 const clickStartBtn = () => {
   timerId = setInterval(changeBodyColor, 1000);
-  refs.startBtnEl.disabled = true;
-  refs.stopBtnEl.disabled = false;
+  makerBtnDisabled(true, false);
 };
 
 const clickStopBtn = () => {
   clearInterval(timerId);
-  refs.startBtnEl.disabled = false;
-  refs.stopBtnEl.disabled = true;
+  makerBtnDisabled();
 };
+
+function makerBtnDisabled(propertyStartBtn = false, propertyStopBtn = true) {
+  refs.startBtnEl.disabled = propertyStartBtn;
+  refs.stopBtnEl.disabled = propertyStopBtn;
+}
 
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;

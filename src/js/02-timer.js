@@ -1,6 +1,8 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import Notiflix from 'notiflix';
+import { Notify } from 'notiflix';
+
+require('flatpickr/dist/themes/material_orange.css');
 
 const refs = {
   inputEl: document.querySelector('#datetime-picker'),
@@ -18,17 +20,14 @@ const options = {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    currentDate = Date.now();
-    chosenDate = selectedDates[0].getTime();
-    deltaTime = chosenDate - currentDate;
-
-    if (chosenDate <= currentDate) {
-      Notiflix.Notify.failure('Please choose a date in the future');
+  onClose([selectedDates]) {
+    const result = new Date() < selectedDates;
+    if (result) {
+      Notify.success('Right choose');
+      refs.startBtnEl.disabled = false;
       return;
     }
-    Notiflix.Notify.success('Right choose');
-    refs.startBtnEl.disabled = false;
+    return Notify.failure('Please choose a date in the future');
   },
 };
 
@@ -39,19 +38,16 @@ const timer = {
 
   onClose() {
     this.intervalID = setInterval(() => {
-      counting = deltaTime -= 1000;
+      const userDate = Date.parse(refs.inputEl.value);
+      counting = userDate - Date.now();
       const timerComponents = convertMs(counting);
       fillCounter(timerComponents);
       if (counting <= 1000) {
-        stopInterval(this.intervalID);
+        clearInterval(this.intervalID);
       }
     }, 1000);
   },
 };
-
-function stopInterval(interval) {
-  clearInterval(interval);
-}
 
 function onStartBtnClick() {
   timer.onClose();
